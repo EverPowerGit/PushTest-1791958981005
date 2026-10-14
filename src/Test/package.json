@@ -1,0 +1,16 @@
+{
+  "name": "payroll-contract-tests",
+  "version": "1.0.0",
+  "main": "run-tests.js",
+  "scripts": {
+    "test": "node run-tests.js"
+  },
+  "dependencies": {
+    "bson": "6.0.0",
+    "hotpocket-js-client": "0.5.7"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "0.34.0"
+  },
+  "license": "ISC"
+}

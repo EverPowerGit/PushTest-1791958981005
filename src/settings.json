@@ -1,0 +1,8 @@
+{
+	"settings": {
+		"postExecutionScriptName": "./post_exec.sh",
+		"dbPath": "payroll.db",
+		"dbScriptsFolderPath": "./dbScripts",
+		"newContractZipFileName": "./newContractData.zip"
+	}
+}

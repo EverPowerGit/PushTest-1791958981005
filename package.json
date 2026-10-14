@@ -1,0 +1,44 @@
+{
+  "name": "payroll_contract",
+  "version": "1.0.0",
+  "description": "Evernode HotPocket Payroll Smart Contract",
+  "main": "src/startup.js",
+  "scripts": {
+    "test": "node ./src/Test/run-tests.js",
+    "removeDist": "if exist dist rmdir /s /q dist",
+    "removeDistLinux": "[ -d dist ] && rm -r dist &>>/dev/null",
+    "dockerBuild": "docker build -f Dockerfile.Build -t payroll-image:latest .",
+    "dockerRun": "docker run -d --name payroll-build-container payroll-image",
+    "fetchDist": "docker cp payroll-build-container:/payroll-contract/dist/ ./dist/",
+    "copyStaticFiles": "copy src\\settings.json dist && copy hp.cfg.override dist && copy .env dist && xcopy /s /i /y \"./src/Data.Deploy/Scripts\" \"dist/dbScripts/\" ",
+    "copyStaticFilesLinux": "cp src/settings.json dist && cp hp.cfg.override dist && cp .env dist && mkdir -p dist/dbScripts && cp -r ./src/Data.Deploy/Scripts/* dist/dbScripts/",
+    "stopContainer": "docker rm -f payroll-build-container && docker image prune -f && docker container prune -f",
+    "buildLinux": "npx ncc build ./src/startup.js -o dist",
+    "buildLinux:prod": "npx ncc build ./src/startup.js --minify -o dist",
+    "start": "npm run build && set HP_INSTANCE_IMAGE=evernode/sashimono:hp.0.6.4-ubt.20.04-njs.20 && hpdevkit deploy dist",
+    "start1": "npm run build1 && export HP_INSTANCE_IMAGE=evernodedev/sashimono:hp.0.6.4-ubt.20.04-njs.20 && hpdevkit deploy dist",
+    "build1": "npm run removeDistLinux && npx ncc build ./src/startup.js -o dist && npm run copyStaticFilesLinux",
+    "build": "npm run removeDist && npm run dockerBuild && npm run dockerRun && npm run fetchDist && npm run copyStaticFiles && npm run stopContainer",
+    "postinstall": "npm i sqlite3 --target_platform=linux --target_arch=x64 --target_libc=glibc --no-save"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@vercel/ncc": "0.36.1",
+    "axios": "1.6.0",
+    "bson": "6.0.0",
+    "crypto": "1.0.1",
+    "google-auth-library": "9.1.0",
+    "hotpocket-nodejs-contract": "0.5.10",
+    "jsonwebtoken": "9.0.2",
+    "jwks-rsa": "3.1.0",
+    "libsodium-wrappers": "0.7.9",
+    "qrcode": "1.5.4",
+    "sqlite-async": "1.2.0",
+    "sqlite3": "5.1.7",
+    "uuid": "9.0.1"
+  },
+  "devDependencies": {
+    "prettier": "3.0.3"
+  }
+}
